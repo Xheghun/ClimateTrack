@@ -21,3 +21,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "Climate Track"
 include(":app")
+include(":domain")
+include(":data")
+include(":presentation")
