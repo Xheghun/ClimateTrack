@@ -1,6 +1,5 @@
-package com.xheghun.climatetrack.ui.screens
+package com.xheghun.climatetrack.ui.composables
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding

@@ -1,6 +1,7 @@
 package com.xheghun.climatetrack.ui.composables
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,9 +18,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.xheghun.climatetrack.R
-import com.xheghun.climatetrack.ui.theme.climateTrackCardBg
-import com.xheghun.climatetrack.ui.theme.climateTrackGreyLight
-
 
 @Composable
 fun SearchTextField(
@@ -33,7 +31,7 @@ fun SearchTextField(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(25.dp))
-            .background(climateTrackCardBg)
+            .background(MaterialTheme.colorScheme.surfaceContainer)
             .padding(horizontal = 14.dp, vertical = 10.dp)
     ) {
         BasicTextField(
@@ -47,7 +45,7 @@ fun SearchTextField(
                 if (value.isEmpty()) {
                     Text(
                         text = hintText,
-                        color = climateTrackGreyLight,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         style = textStyle,
                     )
                 } else {
@@ -62,7 +60,7 @@ fun SearchTextField(
         Icon(
             painter = painterResource(id = R.drawable.search_icon),
             contentDescription = "",
-            tint = climateTrackGreyLight
+            tint = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }
