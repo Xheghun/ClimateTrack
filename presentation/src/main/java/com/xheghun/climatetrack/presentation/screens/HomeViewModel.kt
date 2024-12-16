@@ -67,7 +67,7 @@ class HomeViewModel(
 
     @OptIn(FlowPreview::class)
     private fun fetchWeather() {
-        searchQuery.debounce(300)
+        searchQuery.debounce(200)
             .filter { it.isNotEmpty() && it.length >= 2 }
             .distinctUntilChanged()
             .onEach {
