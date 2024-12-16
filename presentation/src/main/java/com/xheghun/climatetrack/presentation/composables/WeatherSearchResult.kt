@@ -1,5 +1,6 @@
 package com.xheghun.climatetrack.presentation.composables
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -7,9 +8,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -27,18 +28,31 @@ import com.xheghun.climatetrack.presentation.screens.HomeViewModel
 import com.xheghun.climatetrack.presentation.screens.WeatherScreenState
 
 @Composable
-fun WeatherSearchResult(model: HomeViewModel, onItemPressed: (Weather) -> Unit) {
-    val searchState = model.screenState.collectAsStateWithLifecycle().value
+fun WeatherSearchResult(
+    model: HomeViewModel,
+    modifier: Modifier = Modifier,
+    onItemPressed: (Weather) -> Unit
 
-    LazyColumn(Modifier.fillMaxSize()) {
-        when (searchState) {
-            is WeatherScreenState.Search -> {
-                searchState.result?.let {
-                    item { SearchItem(it, onItemPressed) }
-                }
+) {
+    val searchState =
+        (model.screenState.collectAsStateWithLifecycle().value as? WeatherScreenState.Search)
+
+    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier.fillMaxSize()) {
+
+        AnimatedVisibility(visible = searchState?.error != null) {
+            searchState?.error?.let {
+                EmptyState(
+                    "Ops! Something isn't right",
+                    it,
+                    modifier = Modifier.padding(vertical = 25.dp)
+                )
             }
+        }
 
-            else -> {}
+        AnimatedVisibility(visible = searchState?.result != null) {
+            searchState?.result?.let {
+                SearchItem(it, onItemPressed)
+            }
         }
     }
 }

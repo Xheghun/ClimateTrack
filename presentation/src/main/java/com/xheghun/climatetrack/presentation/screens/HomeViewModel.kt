@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 sealed class WeatherScreenState {
     data object Empty : WeatherScreenState()
     data object Loading : WeatherScreenState()
-    data class Search(val result: Weather?) : WeatherScreenState()
+    data class Search(val result: Weather? = null, val error: String? = null) : WeatherScreenState()
     data class FavCity(val weather: Weather) : WeatherScreenState()
 }
 
@@ -51,7 +51,6 @@ class HomeViewModel(
             updateScreenState(WeatherScreenState.Search(null))
             fetchWeather()
         }
-
     }
 
     fun updateScreenState(state: WeatherScreenState) {
@@ -76,6 +75,9 @@ class HomeViewModel(
                     result?.let {
                         updateScreenState(WeatherScreenState.Search(it))
                     }
+                }.onFailure {
+                    updateScreenState(WeatherScreenState.Search(error = "please check your internet connection"))
+                    Log.e("HomeViewModel", "Error making request", it)
                 }
             }.launchIn(viewModelScope)
     }

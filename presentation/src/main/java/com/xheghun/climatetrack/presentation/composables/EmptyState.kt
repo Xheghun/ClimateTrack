@@ -11,16 +11,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun EmptyState(modifier: Modifier = Modifier) {
+fun EmptyState(
+    title: String = "No City Selected",
+    message: String = "Please Search for A city",
+    modifier: Modifier = Modifier
+) {
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier.fillMaxWidth()) {
         Text(
-            "No City Selected",
+            title,
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onPrimary,
             modifier = Modifier.padding(vertical = 8.dp)
         )
         Text(
-            "Please Search for A city",
+            message,
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onPrimary,
         )

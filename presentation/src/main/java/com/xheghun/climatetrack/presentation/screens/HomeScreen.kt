@@ -53,7 +53,9 @@ fun HomeScreen(modifier: Modifier) {
                 }
             }
 
-            AnimatedVisibility(visible = screenState is WeatherScreenState.Search) {
+            AnimatedVisibility(
+                visible = screenState is WeatherScreenState.Search,
+            ) {
                 WeatherSearchResult(model) {
                     model.updateScreenState(WeatherScreenState.FavCity(it))
                     model.saveFavCity(it)
