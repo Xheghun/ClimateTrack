@@ -6,23 +6,27 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.xheghun.climatetrack.presentation.composables.EmptyState
 import com.xheghun.climatetrack.presentation.composables.WeatherSearchResult
 import com.xheghun.climatetrack.presentation.composables.SearchTextField
 import com.xheghun.climatetrack.presentation.composables.WeatherInfo
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeScreen(modifier: Modifier) {
-    val model = viewModel<HomeViewModel>()
+    val model = koinViewModel<HomeViewModel>()
+    val screenState = model.screenState.collectAsStateWithLifecycle().value
+
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     Column(modifier = modifier.padding(12.dp)) {
         SearchTextField(
-            value = model.searchQuery.collectAsState().value,
+            value = model.searchQuery.collectAsStateWithLifecycle().value,
             onValueChange = {
                 model.updateSearchQuery(it)
             },
@@ -38,17 +42,22 @@ fun HomeScreen(modifier: Modifier) {
                 .fillMaxWidth()
                 .padding(vertical = 20.dp)
         ) {
-            AnimatedVisibility(visible = model.screenState.collectAsState().value == WeatherScreenState.Empty) {
+            AnimatedVisibility(visible = screenState == WeatherScreenState.Empty) {
                 EmptyState()
             }
 
-            AnimatedVisibility(visible = model.screenState.collectAsState().value == WeatherScreenState.Success) {
-                WeatherInfo()
+            AnimatedVisibility(visible = screenState is WeatherScreenState.FavCity) {
+                val faveCity = screenState as? WeatherScreenState.FavCity
+                faveCity?.let {
+                    WeatherInfo(it.weather)
+                }
             }
 
-            AnimatedVisibility(visible = model.screenState.collectAsState().value == WeatherScreenState.Search) {
+            AnimatedVisibility(visible = screenState is WeatherScreenState.Search) {
                 WeatherSearchResult(model) {
-                    model.updateScreenState(WeatherScreenState.Success)
+                    model.updateScreenState(WeatherScreenState.FavCity(it))
+                    model.saveFavCity(it)
+                    keyboardController?.hide()
                 }
             }
         }

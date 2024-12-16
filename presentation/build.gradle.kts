@@ -39,7 +39,6 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-
 }
 
 dependencies {
@@ -55,6 +54,11 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.lifecycle.compose)
 
+    //koin
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
+    implementation(libs.koin.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose.android)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

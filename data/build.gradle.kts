@@ -1,7 +1,17 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
 }
+
+
+val credentialsPropFile = rootProject.file("credentials.properties")
+val credentials = Properties().apply {
+    load(credentialsPropFile.inputStream())
+}
+
+val weatherApiKey = credentials["WEATHER_API_KEY"] as String
 
 android {
     namespace = "com.xheghun.climatetracker.data"
@@ -12,6 +22,8 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+
+        buildConfigField("String", "EXCHANGE_API_KEY", weatherApiKey)
     }
 
     buildTypes {
@@ -27,21 +39,31 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
+    buildFeatures {
+        buildConfig = true
+    }
+
     kotlinOptions {
         jvmTarget = "1.8"
     }
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.koin.android)
+    implementation(project(":domain"))
 
     //retrofit
     implementation(libs.squareup.retrofit)
+    implementation(libs.squareup.okhttp)
+    implementation(libs.squareup.logging.interceptor)
     implementation(libs.squareup.gson)
 
     //datastore
     implementation(libs.androidx.datastore)
+
+    //koin
+    implementation(libs.koin.core)
+    //implementation(libs.koin.android)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

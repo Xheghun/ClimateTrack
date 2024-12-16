@@ -8,15 +8,13 @@ espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.9.3"
 composeBom = "2024.04.01"
-appcompat = "1.7.0"
-material = "1.12.0"
 koinVersion = "3.6.0-wasm-alpha2"
 koinAnnotations = "2.0.0-Beta1"
 squareupVersion = "2.6.2"
 okhttpVersion = "4.11.0"
-coilVersion = "3.0.0-rc02"
 datastoreVersion = "1.1.1"
 ksp = "1.9.0-1.0.13"
+lifecycleRuntimeComposeAndroid = "2.8.7"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -34,9 +32,8 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-lifecycle-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
-androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
-koin-core = { group = "io.insert-koin", name = "koin-core" }
+koin-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koinVersion" }
+koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koinVersion"}
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koinVersion" }
 koin-annotations = { group = "io.insert-koin", name = "koin-annotations", version.ref = "koinAnnotations" }
 koin-compilier = { group = "io.insert-koin", name = "koin-ksp-compiler", version.ref = "koinAnnotations" }
@@ -44,9 +41,8 @@ squareup-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", versi
 squareup-okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttpVersion" }
 squareup-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "squareupVersion" }
 squareup-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttpVersion" }
-coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coilVersion" }
-coil-network = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coilVersion" }
 androidx-datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastoreVersion" }
+androidx-lifecycle-runtime-compose-android = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose-android", version.ref = "lifecycleRuntimeComposeAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

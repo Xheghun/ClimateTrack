@@ -20,40 +20,50 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.xheghun.climatetrack.domain.model.Weather
 import com.xheghun.climatetrack.presentation.R
 import com.xheghun.climatetrack.presentation.screens.HomeViewModel
+import com.xheghun.climatetrack.presentation.screens.WeatherScreenState
 
 @Composable
-fun WeatherSearchResult(model: HomeViewModel, onItemPressed: () -> Unit) {
-     model.searchQuery
+fun WeatherSearchResult(model: HomeViewModel, onItemPressed: (Weather) -> Unit) {
+    val searchState = model.screenState.collectAsStateWithLifecycle().value
+
     LazyColumn(Modifier.fillMaxSize()) {
-        items(3) {
-            SearchItem(onItemPressed::invoke)
+        when (searchState) {
+            is WeatherScreenState.Search -> {
+                searchState.result?.let {
+                    item { SearchItem(it, onItemPressed) }
+                }
+            }
+
+            else -> {}
         }
     }
 }
 
 @Composable
-private fun SearchItem(onItemPressed: () -> Unit) {
+private fun SearchItem(weather: Weather, onItemPressed: (Weather) -> Unit) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .padding(vertical = 10.dp)
             .clip(RoundedCornerShape(12.dp))
-            .clickable { onItemPressed.invoke()}
+            .clickable { onItemPressed.invoke(weather) }
             .background(MaterialTheme.colorScheme.surfaceContainer)
             .padding(16.dp)
     ) {
         Column {
             Text(
-                text = "Mumbai",
+                text = weather.location.name,
                 color = MaterialTheme.colorScheme.onPrimary,
                 style = MaterialTheme.typography.displayMedium
             )
             Box(modifier = Modifier.height(5.dp))
             Row {
                 Text(
-                    text = "31",
+                    text = "${weather.current.tempC}",
                     color = MaterialTheme.colorScheme.onPrimary,
                     style = MaterialTheme.typography.titleLarge
                 )
@@ -66,6 +76,9 @@ private fun SearchItem(onItemPressed: () -> Unit) {
             }
         }
         Box(Modifier.weight(1f))
-        Image(painter = painterResource(id = R.drawable.cloudy), contentDescription = "")
+        Image(
+            painter = painterResource(id = resolveIconRes(weather.current.tempC)),
+            contentDescription = ""
+        )
     }
 }

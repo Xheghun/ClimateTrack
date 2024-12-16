@@ -7,11 +7,11 @@ data class Weather(
 
 data class Current(
     val lastUpdated: String,
-    val tempC: Double,
+    val tempC: Int,
     val condition: Condition,
     val humidity: Long,
-    val feelsLikeCelsius: Double,
-    val uv: Double
+    val feelsLikeCelsius: Int,
+    val uv: Int
 )
 
 data class Condition(
@@ -24,5 +24,7 @@ data class Location(
     val name: String,
     val region: String,
     val country: String,
-    val timezoneID: String
+    val timezoneID: String,
+    val lat: Double,
+    val lon: Double
 )

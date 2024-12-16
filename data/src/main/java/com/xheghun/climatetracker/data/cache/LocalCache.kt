@@ -29,6 +29,7 @@ class LocalCache<T>(
 
             if (cacheValue != null && cacheTime != null) {
                 if (System.currentTimeMillis() - cacheTime <= timeToLive) {
+                    Log.d("", "Retrieving ${gson.fromJson(cacheValue, clazz)}")
                     return gson.fromJson(cacheValue, clazz)
                 }
             } else {

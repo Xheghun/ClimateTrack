@@ -19,18 +19,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.xheghun.climatetrack.domain.model.Weather
 import com.xheghun.climatetrack.presentation.R
 
 @Composable
-fun WeatherInfo() {
+fun WeatherInfo(weather: Weather) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Image(painter = painterResource(id = R.drawable.cloudy), contentDescription = "")
+        Image(
+            painter = painterResource(id = resolveIconRes(weather.current.tempC)),
+            contentDescription = "",
+            modifier = Modifier.padding(vertical = 10.dp).size(100.dp)
+        )
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(vertical = 8.dp)
         ) {
             Text(
-                "Hyderabad",
+                weather.location.name,
                 color = MaterialTheme.colorScheme.onPrimary,
                 style = MaterialTheme.typography.titleMedium
             )
@@ -45,7 +50,7 @@ fun WeatherInfo() {
 
         Row {
             Text(
-                text = "31",
+                text = "${weather.current.tempC}",
                 color = MaterialTheme.colorScheme.onPrimary,
                 style = MaterialTheme.typography.titleLarge
             )
@@ -64,11 +69,15 @@ fun WeatherInfo() {
                 .background(MaterialTheme.colorScheme.surfaceContainer)
                 .padding(16.dp)
         ) {
-            Info(title = "Humidity", info = "20%", modifier = Modifier.weight(1f))
-            Info(title = "UV", info = "4", modifier = Modifier.weight(1f))
+            Info(
+                title = "Humidity",
+                info = "${weather.current.humidity}",
+                modifier = Modifier.weight(1f)
+            )
+            Info(title = "UV", info = "${weather.current.uv}", modifier = Modifier.weight(1f))
             Info(
                 title = "Feels Like",
-                info = "30",
+                info = "${weather.current.feelsLikeCelsius}",
                 modifier = Modifier.weight(1f),
                 showDegrees = true
             )
@@ -103,5 +112,15 @@ fun Info(title: String, info: String, modifier: Modifier = Modifier, showDegrees
                 )
             }
         }
+    }
+}
+
+fun resolveIconRes(temp: Int): Int {
+    return if (temp >= 25) {
+        R.drawable.sunny
+    } else if (temp >= 10) {
+        R.drawable.cloudy
+    } else {
+        R.drawable.cool
     }
 }
