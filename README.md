@@ -18,6 +18,8 @@ This app was build to demonstrate clean architecture and multi-module developmen
 - presentation: contains, ui related classes, `composables`, and resources.
 - app: this is the apps entry point, holding activities, koinModule initialization, and android build configurations.
 
+## Artefact
+[APK]()
 
 https://github.com/user-attachments/assets/1c1db12c-8265-47cb-a7af-cf1c930f299b
 
