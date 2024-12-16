@@ -19,7 +19,8 @@ This app was build to demonstrate clean architecture and multi-module developmen
 - app: this is the apps entry point, holding activities, koinModule initialization, and android build configurations.
 
 ## Artefact
-[APK]()
+[APK](https://drive.google.com/file/d/1lbkOm9a-Lyqh9Tnl-T8q6ToFiB9-zDV3/view?usp=sharing)
+
 
 https://github.com/user-attachments/assets/1c1db12c-8265-47cb-a7af-cf1c930f299b
 
