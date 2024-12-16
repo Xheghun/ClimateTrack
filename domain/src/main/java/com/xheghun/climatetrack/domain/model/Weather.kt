@@ -10,8 +10,8 @@ data class Current(
     val tempC: Int,
     val condition: Condition,
     val humidity: Long,
-    val feelsLikeCelsius: Int,
-    val uv: Int
+    val feelsLikeCelsius: Double,
+    val uvValue: Double
 )
 
 data class Condition(

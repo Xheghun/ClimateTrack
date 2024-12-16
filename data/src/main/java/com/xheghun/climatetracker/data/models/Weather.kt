@@ -16,7 +16,8 @@ data class Current(
     val humidity: Long? = null,
     @SerializedName("feelslike_c")
     val feelsLikeCelsius: Double? = null,
-    val uv: Double? = null
+    @SerializedName("uv")
+    val uvValue: Double? = null
 )
 
 data class Condition(
@@ -50,8 +51,8 @@ fun Current.toDomainCurrent(): com.xheghun.climatetrack.domain.model.Current {
         condition = condition?.toDomainCondition()
             ?: com.xheghun.climatetrack.domain.model.Condition("", "", 0),
         humidity = humidity ?: 0,
-        feelsLikeCelsius = feelsLikeCelsius?.toInt() ?: 0,
-        uv = uv?.toInt() ?: 0
+        feelsLikeCelsius = feelsLikeCelsius ?: 0.0,
+        uvValue = uvValue ?: 0.0
     )
 }
 

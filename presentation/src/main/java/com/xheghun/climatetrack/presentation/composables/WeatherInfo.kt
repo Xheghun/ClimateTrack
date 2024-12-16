@@ -74,10 +74,10 @@ fun WeatherInfo(weather: Weather) {
                 info = "${weather.current.humidity}",
                 modifier = Modifier.weight(1f)
             )
-            Info(title = "UV", info = "${weather.current.uv}", modifier = Modifier.weight(1f))
+            Info(title = "UV", info = "${weather.current.uvValue.toInt()}", modifier = Modifier.weight(1f))
             Info(
                 title = "Feels Like",
-                info = "${weather.current.feelsLikeCelsius}",
+                info = "${weather.current.feelsLikeCelsius.toInt()}",
                 modifier = Modifier.weight(1f),
                 showDegrees = true
             )
