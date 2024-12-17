@@ -7,12 +7,15 @@ import com.xheghun.climatetrack.domain.model.Weather
 import com.xheghun.climatetrack.domain.usecase.FetchCityWeatherUseCase
 import com.xheghun.climatetrack.domain.usecase.FetchFavouriteCityWeatherUseCase
 import com.xheghun.climatetrack.domain.usecase.SaveFavouriteCityWeatherUseCase
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -42,14 +45,24 @@ class HomeViewModel(
     private val _searchQuery = MutableStateFlow("")
     val searchQuery = _searchQuery.asStateFlow()
 
+    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
+    val searchQueryDebounce = _searchQuery.debounce(1000)
+        .filter { it.isNotEmpty() && it.length >= 2 }
+        .distinctUntilChanged()
+        .flatMapLatest {
+            flow<Unit> {
+                fetchWeather(it.trim())
+            }
+        }.launchIn(viewModelScope)
+
+
     fun updateSearchQuery(query: String) {
-        _searchQuery.value = query.trim()
+        _searchQuery.value = query
 
         if (query.isEmpty()) {
             updateScreenState(WeatherScreenState.Empty)
         } else {
             updateScreenState(WeatherScreenState.Search(null))
-            fetchWeather()
         }
     }
 
@@ -65,21 +78,16 @@ class HomeViewModel(
         }
     }
 
-    @OptIn(FlowPreview::class)
-    private fun fetchWeather() {
-        searchQuery.debounce(200)
-            .filter { it.isNotEmpty() && it.length >= 2 }
-            .distinctUntilChanged()
-            .onEach {
-                fetchCityWeatherUseCase.invoke(searchQuery.value).onSuccess { result ->
-                    result?.let {
-                        updateScreenState(WeatherScreenState.Search(it))
-                    }
-                }.onFailure {
-                    updateScreenState(WeatherScreenState.Search(error = "please check your internet connection"))
-                    Log.e("HomeViewModel", "Error making request", it)
-                }
-            }.launchIn(viewModelScope)
+    private suspend fun fetchWeather(query: String) {
+        fetchCityWeatherUseCase.invoke(query).onSuccess { result ->
+            result?.let {
+                updateScreenState(WeatherScreenState.Search(it))
+            }
+        }.onFailure {
+            updateScreenState(WeatherScreenState.Search(error = "please check your internet connection"))
+            Log.e("HomeViewModel", "Error making request", it)
+        }
+
     }
 
     private fun init() {
@@ -100,7 +108,7 @@ class HomeViewModel(
                     updateScreenState(WeatherScreenState.Empty)
                 }
             }.onFailure {
-                Log.e("", "Error Retrieving From cache",it)
+                Log.e("", "Error Retrieving From cache", it)
                 updateScreenState(WeatherScreenState.Empty)
             }
 
