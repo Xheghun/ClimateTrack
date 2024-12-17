@@ -18,6 +18,8 @@ This app was build to demonstrate clean architecture and multi-module developmen
 - presentation: contains, ui related classes, `composables`, and resources.
 - app: this is the apps entry point, holding activities, koinModule initialization, and android build configurations.
 
+NOTE: the app persists the user's fav city for a duration of 6 hours and then resets, this is to demonstrate the concept of cache validity
+
 ## Artefact
 [APK](https://github.com/Xheghun/ClimateTrack/releases/download/v0.0.1/climate-track.debug.apk)
 

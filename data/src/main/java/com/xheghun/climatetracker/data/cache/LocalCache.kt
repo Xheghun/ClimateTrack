@@ -8,7 +8,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.first
-import okio.IOException
+import java.io.IOException
 
 class LocalCache<T>(
     private val context: Context,

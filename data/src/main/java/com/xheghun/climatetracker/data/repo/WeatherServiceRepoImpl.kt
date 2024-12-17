@@ -1,6 +1,5 @@
 package com.xheghun.climatetracker.data.repo
 
-import android.util.Log
 import com.xheghun.climatetrack.domain.model.Weather
 import com.xheghun.climatetrack.domain.repo.WeatherRepo
 import com.xheghun.climatetracker.data.api.WeatherApiService

@@ -100,7 +100,7 @@ class HomeViewModel(
                     updateScreenState(WeatherScreenState.Empty)
                 }
             }.onFailure {
-                Log.d("", "Error Retrieving From cache $it")
+                Log.e("", "Error Retrieving From cache",it)
                 updateScreenState(WeatherScreenState.Empty)
             }
 
