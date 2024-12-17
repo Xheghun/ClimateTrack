@@ -74,8 +74,6 @@ fun dataModule(context: Context) = module {
         LocalCache(
             context,
             get(),
-            Weather::class.java,
-            21_600_000 //6 hours
-        ) as Cache<Weather>
+            Weather::class.java) as Cache<Weather>
     }
 }

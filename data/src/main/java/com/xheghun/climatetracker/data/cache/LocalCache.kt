@@ -13,8 +13,7 @@ import java.io.IOException
 class LocalCache<T>(
     private val context: Context,
     private val gson: Gson,
-    private val clazz: Class<T>,
-    private val timeToLive: Long
+    private val clazz: Class<T>
 ) : Cache<T> {
     private val Context.dataStore by preferencesDataStore(name = "local_cache")
 
@@ -22,19 +21,12 @@ class LocalCache<T>(
         try {
             val preference = context.dataStore.data.first()
             val value = stringPreferencesKey(key)
-            val timestampKey = longPreferencesKey("$key-timestamp")
 
             val cacheValue = preference[value]
-            val cacheTime = preference[timestampKey]
 
-            if (cacheValue != null && cacheTime != null) {
-                if (System.currentTimeMillis() - cacheTime <= timeToLive) {
-                    Log.d("", "Retrieving ${gson.fromJson(cacheValue, clazz)}")
-                    return gson.fromJson(cacheValue, clazz)
-                }
-            } else {
-                //clear expired cache
-                remove(key)
+            if (cacheValue != null) {
+                Log.d("", "Retrieving ${gson.fromJson(cacheValue, clazz)}")
+                return gson.fromJson(cacheValue, clazz)
             }
             return null
         } catch (e: IOException) {
@@ -46,12 +38,10 @@ class LocalCache<T>(
         runCatching {
             context.dataStore.edit { preference ->
                 val valueKey = stringPreferencesKey(key)
-                val timestampKey = longPreferencesKey("$key-timestamp")
 
                 Log.d("saving", "Saving Key: $key, value: $value")
 
                 preference[valueKey] = gson.toJson(value)
-                preference[timestampKey] = System.currentTimeMillis()
             }
         }
     }
@@ -60,10 +50,8 @@ class LocalCache<T>(
         runCatching {
             context.dataStore.edit { preference ->
                 val valueKey = stringPreferencesKey(key)
-                val timestampKey = longPreferencesKey("$key-timestamp")
 
                 preference.remove(valueKey)
-                preference.remove(timestampKey)
             }
         }
     }
