@@ -3,9 +3,11 @@ package com.xheghun.climatetrack.presentation.screens
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.xheghun.climatetrack.domain.model.City
 import com.xheghun.climatetrack.domain.model.Weather
 import com.xheghun.climatetrack.domain.usecase.FetchCityWeatherUseCase
 import com.xheghun.climatetrack.domain.usecase.FetchFavouriteCityWeatherUseCase
+import com.xheghun.climatetrack.domain.usecase.FetchSimilarCityUseCase
 import com.xheghun.climatetrack.domain.usecase.SaveFavouriteCityWeatherUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -29,12 +31,16 @@ sealed class WeatherScreenState {
 class HomeViewModel(
     private val fetchCityWeatherUseCase: FetchCityWeatherUseCase,
     private val fetchFavCityWeatherUseCase: FetchFavouriteCityWeatherUseCase,
-    private val saveFavCityWeatherUseCase: SaveFavouriteCityWeatherUseCase
+    private val saveFavCityWeatherUseCase: SaveFavouriteCityWeatherUseCase,
+    private val fetchSimilarCityUseCase: FetchSimilarCityUseCase
 ) : ViewModel() {
 
     init {
         init()
     }
+
+    private val _similarCities = MutableStateFlow<List<City>>(listOf())
+    val similarCities = _similarCities.asStateFlow()
 
     private val _screenState: MutableStateFlow<WeatherScreenState> =
         MutableStateFlow(WeatherScreenState.Loading)
@@ -50,10 +56,9 @@ class HomeViewModel(
         .distinctUntilChanged()
         .flatMapLatest {
             flow<Unit> {
-                fetchWeather(it.trim())
+                getSimilarCities(it.trim())
             }
         }.launchIn(viewModelScope)
-
 
     fun updateSearchQuery(query: String) {
         _searchQuery.value = query
@@ -77,7 +82,16 @@ class HomeViewModel(
         }
     }
 
-    private suspend fun fetchWeather(query: String) {
+
+    private suspend fun getSimilarCities(query: String) {
+        fetchSimilarCityUseCase.invoke(query).onSuccess {
+            _similarCities.value = it
+        }.onFailure {
+            Log.e("", "error fetching", it)
+        }
+    }
+
+    suspend fun fetchWeather(query: String) {
         fetchCityWeatherUseCase.invoke(query).onSuccess { result ->
             result?.let {
                 updateScreenState(WeatherScreenState.Search(it))

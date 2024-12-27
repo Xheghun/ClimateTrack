@@ -28,3 +28,8 @@ data class Location(
     val lat: Double,
     val lon: Double
 )
+
+data class City(
+    val name: String,
+    val region: String,
+)

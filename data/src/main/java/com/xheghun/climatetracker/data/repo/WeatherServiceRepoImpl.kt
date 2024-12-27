@@ -1,5 +1,6 @@
 package com.xheghun.climatetracker.data.repo
 
+import com.xheghun.climatetrack.domain.model.City
 import com.xheghun.climatetrack.domain.model.Weather
 import com.xheghun.climatetrack.domain.repo.WeatherRepo
 import com.xheghun.climatetracker.data.api.WeatherApiService
@@ -13,6 +14,13 @@ class WeatherServiceRepoImpl(
     private val cache: Cache<Weather>,
     private val dispatcher: CoroutineDispatcher
 ) : WeatherRepo {
+    override suspend fun getSimilarCities(city: String): Result<List<City>> =
+        runCatching {
+            withContext(dispatcher) {
+                weatherApiService.getSimilarCity(city)
+            }
+        }
+
     override suspend fun getWeatherInfoByCity(city: String): Result<Weather?> =
         runCatching {
             withContext(dispatcher) {
